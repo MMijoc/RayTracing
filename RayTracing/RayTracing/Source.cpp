@@ -5,37 +5,37 @@
 
 int main()
 {
-    CreateImageFile();
-    return 0;
+	createImageFile();
+	return 0;
 }
 
-void CreateImageFile()
+void createImageFile()
 {
-    // Image
-    const int image_width = 256;
-    const int image_height = 256;
+	// Image
+	const int imageWidth = 256;
+	const int imageHeight = 256;
 
-    std::ofstream ppmImageFile;
-    ppmImageFile.open("image.ppm");
+	std::ofstream ppmImageFile;
+	ppmImageFile.open("image.ppm");
 
-    // Render
-    ppmImageFile << "P3\n" << image_width << ' ' << image_height << "\n255\n";
+	// Render
+	ppmImageFile << "P3\n" << imageWidth << ' ' << imageHeight << "\n255\n";
 
-    for (int j = image_height-1; j >= 0; --j) {
-        std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush; // progress indicator
-        for (int i = 0; i < image_width; ++i) {
-            auto r = double(i) / (image_width-1);
-            auto g = double(j) / (image_height-1);
-            auto b = 0.25;
+	for (int j = imageHeight - 1; j >= 0; --j) {
+		std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush; // progress indicator
+		for (int i = 0; i < imageWidth; ++i) {
+			auto r = double(i) / (imageWidth - 1);
+			auto g = double(j) / (imageHeight - 1);
+			auto b = 0.25;
 
-            int ir = static_cast<int>(255.999 * r);
-            int ig = static_cast<int>(255.999 * g);
-            int ib = static_cast<int>(255.999 * b);
+			int ir = static_cast<int>(255.999 * r);
+			int ig = static_cast<int>(255.999 * g);
+			int ib = static_cast<int>(255.999 * b);
 
-            ppmImageFile << ir << ' ' << ig << ' ' << ib << '\n';
-        }
-    }
-    std::cerr << "\nDone.\n";
+			ppmImageFile << ir << ' ' << ig << ' ' << ib << '\n';
+		}
+	}
+	std::cerr << "\nDone.\n";
 
-    ppmImageFile.close();
+	ppmImageFile.close();
 }

@@ -1,84 +1,83 @@
-#ifndef VECTOR3_H
-#define VECTOR3_H
+#pragma once
+
+#include "Vector3.h"
 
 #include <cmath>
 #include <iostream>
 
 using std::sqrt;
 
-class Vector3
-{
-public:
-	// Fields
-	double elements[3];
-
-	// Methods
-	double x() const { return elements[0]; }
-	double y() const { return elements[1]; }
-	double z() const { return elements[2]; }
-	double length() const
-	{
-		return sqrt(lengthSquared());
-	}
-	double lengthSquared() const
-	{
-		return elements[0] * elements[0] +
-			elements[1] * elements[1] +
-			elements[2] * elements[2];
-	}
-
-	// Constructors
-	Vector3()
+namespace RayTracing {
+	Vector3::Vector3()
 	{
 		for (size_t i = 0; i < 3; i++)
 		{
-			elements[0] = 0;
+			Elements[0] = 0;
 		}
 	}
-	Vector3(double element0, double element1, double element2)
+
+	Vector3::Vector3(double element0, double element1, double element2)
 	{
-		elements[0] = element0;
-		elements[1] = element1;
-		elements[2] = element2;
+		Elements[0] = element0;
+		Elements[1] = element1;
+		Elements[2] = element2;
 	}
 
-	// operator overloads
-	double operator[](int i) const
+	double Vector3::X() const { return Elements[0]; }
+
+	double Vector3::Y() const { return Elements[1]; }
+
+	double Vector3::Z() const { return Elements[2]; }
+
+	double Vector3::Length() const
 	{
-		return elements[i];
+		return sqrt(LengthSquared());
 	}
 
-	double& operator[](int i) {
-		return elements[i];
+	double Vector3::LengthSquared() const
+	{
+		return
+			Elements[0] * Elements[0] +
+			Elements[1] * Elements[1] +
+			Elements[2] * Elements[2];
 	}
 
-	Vector3& operator+=(const Vector3& v)
+	Vector3& Vector3::operator+=(const Vector3& v)
 	{
-		elements[0] += v.elements[0];
-		elements[1] += v.elements[1];
-		elements[2] += v.elements[2];
+		Elements[0] += v.Elements[0];
+		Elements[1] += v.Elements[1];
+		Elements[2] += v.Elements[2];
+
 		return *this;
 	}
 
-	Vector3 operator-() const
+	Vector3 Vector3::operator-() const
 	{
-		return Vector3(-elements[0], -elements[1], -elements[2]);
+		return Vector3(-Elements[0], -Elements[1], -Elements[2]);
 	}
 
-	Vector3& operator*=(const double t) {
-		elements[0] *= t;
-		elements[1] *= t;
-		elements[2] *= t;
+	Vector3& Vector3::operator*=(const double t) {
+		Elements[0] *= t;
+		Elements[1] *= t;
+		Elements[2] *= t;
+
 		return *this;
 	}
 
-	Vector3& operator/=(const double t) {
+	Vector3& Vector3::operator/=(const double t) {
 		return *this *= 1 / t;
 	}
-};
 
-// Type aliases for Vector3
-using Point3 = Vector3;   // 3D point
-using Color = Vector3;    // RGB color
+	double Vector3::operator[](int i) const
+	{
+		return Elements[i];
+	}
 
-#endif
+	double& Vector3::operator[](int i) {
+		return Elements[i];
+	}
+
+
+	using Point3 = Vector3;   // 3D point
+	using Color = Vector3;    // RGB color
+}

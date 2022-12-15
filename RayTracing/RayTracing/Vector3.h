@@ -1,4 +1,5 @@
 #pragma once
+
 #include <iostream>
 
 namespace RayTracing {
@@ -27,6 +28,9 @@ namespace RayTracing {
 
 	};
 
+	using Point3 = Vector3;   // 3D point
+	using Color = Vector3;    // RGB color
+
 	std::ostream& operator<<(std::ostream& out, const Vector3& v);
 	Vector3 operator+(const Vector3& u, const Vector3& v);
 	Vector3 operator-(const Vector3& u, const Vector3& v);
@@ -37,5 +41,4 @@ namespace RayTracing {
 	double Dot(const Vector3& u, const Vector3& v);
 	Vector3 Cross(const Vector3& u, const Vector3& v);
 	Vector3 UnitVector(Vector3 v);
-
 }

@@ -1,18 +1,20 @@
 #include <iostream>
 #include <fstream>
+
 #include "Source.h"
 #include "Vector3.h"
+#include "Color.h"
 
 using namespace RayTracing;
 
 int main()
 {
-	//createImageFile();
+	CreateImageFile();
 
 	return 0;
 }
 
-void createImageFile()
+void CreateImageFile()
 {
 	// Image
 	const int imageWidth = 256;
@@ -27,15 +29,8 @@ void createImageFile()
 	for (int j = imageHeight - 1; j >= 0; --j) {
 		std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush; // progress indicator
 		for (int i = 0; i < imageWidth; ++i) {
-			auto r = double(i) / (imageWidth - 1);
-			auto g = double(j) / (imageHeight - 1);
-			auto b = 0.25;
-
-			int ir = static_cast<int>(255.999 * r);
-			int ig = static_cast<int>(255.999 * g);
-			int ib = static_cast<int>(255.999 * b);
-
-			ppmImageFile << ir << ' ' << ig << ' ' << ib << '\n';
+			Color pixel_color(double(i) / (imageWidth - 1), double(j) / (imageHeight - 1), 0.25);
+			WriteColor(ppmImageFile, pixel_color);
 		}
 	}
 	std::cerr << "\nDone.\n";

@@ -1,8 +1,7 @@
-#pragma once
-
-#include "Vector3.h"
 #include <cmath>
 #include <iostream>
+
+#include "Vector3.h"
 
 using std::sqrt;
 
@@ -135,6 +134,4 @@ namespace RayTracing {
 		return v / v.Length();
 	}
 
-	using Point3 = Vector3;   // 3D point
-	using Color = Vector3;    // RGB color
 }

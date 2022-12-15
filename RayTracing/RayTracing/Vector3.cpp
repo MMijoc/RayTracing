@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Vector3.h"
-
 #include <cmath>
 #include <iostream>
 
@@ -78,63 +77,61 @@ namespace RayTracing {
 	}
 
 
-	// Vector3 Utility Functions
-
-	inline std::ostream& operator<<(std::ostream& out, const Vector3& v) {
+	std::ostream& operator<<(std::ostream& out, const Vector3& v) {
 		return out << v.Elements[0] << ' ' << v.Elements[1] << ' ' << v.Elements[2];
 	}
 
-	inline Vector3 operator+(const Vector3& u, const Vector3& v) {
+	Vector3 operator+(const Vector3& u, const Vector3& v) {
 		return Vector3(
 			u.Elements[0] + v.Elements[0],
 			u.Elements[1] + v.Elements[1],
 			u.Elements[2] + v.Elements[2]);
 	}
 
-	inline Vector3 operator-(const Vector3& u, const Vector3& v) {
+	Vector3 operator-(const Vector3& u, const Vector3& v) {
 		return Vector3(
 			u.Elements[0] - v.Elements[0],
 			u.Elements[1] - v.Elements[1],
 			u.Elements[2] - v.Elements[2]);
 	}
 
-	inline Vector3 operator*(const Vector3& u, const Vector3& v) {
+	Vector3 operator*(const Vector3& u, const Vector3& v) {
 		return Vector3(
 			u.Elements[0] * v.Elements[0],
 			u.Elements[1] * v.Elements[1],
 			u.Elements[2] * v.Elements[2]);
 	}
 
-	inline Vector3 operator*(double t, const Vector3& v) {
+	Vector3 operator*(double t, const Vector3& v) {
 		return Vector3(
 			t * v.Elements[0],
 			t * v.Elements[1],
 			t * v.Elements[2]);
 	}
 
-	inline Vector3 operator*(const Vector3& v, double t) {
+	Vector3 operator*(const Vector3& v, double t) {
 		return t * v;
 	}
 
-	inline Vector3 operator/(Vector3 v, double t) {
+	Vector3 operator/(Vector3 v, double t) {
 		return (1 / t) * v;
 	}
 
-	inline double Dot(const Vector3& u, const Vector3& v) {
+	double Dot(const Vector3& u, const Vector3& v) {
 		return
 			u.Elements[0] * v.Elements[0] +
 			u.Elements[1] * v.Elements[1] +
 			u.Elements[2] * v.Elements[2];
 	}
 
-	inline Vector3 Cross(const Vector3& u, const Vector3& v) {
+	Vector3 Cross(const Vector3& u, const Vector3& v) {
 		return Vector3(
 			u.Elements[1] * v.Elements[2] - u.Elements[2] * v.Elements[1],
 			u.Elements[2] * v.Elements[0] - u.Elements[0] * v.Elements[2],
 			u.Elements[0] * v.Elements[1] - u.Elements[1] * v.Elements[0]);
 	}
 
-	inline Vector3 UnitVector(Vector3 v) {
+	Vector3 UnitVector(Vector3 v) {
 		return v / v.Length();
 	}
 

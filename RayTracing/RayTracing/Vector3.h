@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 
 namespace RayTracing {
 	class Vector3
@@ -25,5 +26,16 @@ namespace RayTracing {
 	private:
 
 	};
+
+	std::ostream& operator<<(std::ostream& out, const Vector3& v);
+	Vector3 operator+(const Vector3& u, const Vector3& v);
+	Vector3 operator-(const Vector3& u, const Vector3& v);
+	Vector3 operator*(const Vector3& u, const Vector3& v);
+	Vector3 operator*(double t, const Vector3& v);
+	Vector3 operator*(const Vector3& v, double t);
+	Vector3 operator/(Vector3 v, double t);
+	double Dot(const Vector3& u, const Vector3& v);
+	Vector3 Cross(const Vector3& u, const Vector3& v);
+	Vector3 UnitVector(Vector3 v);
 
 }

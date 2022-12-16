@@ -18,7 +18,7 @@ namespace RayTracing {
 
     Vector3 Ray::GetDirection() const
     {
-        return Vector3();
+        return Direction;
     }
 
     Point3 Ray::At(double t) const

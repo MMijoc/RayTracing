@@ -100,7 +100,7 @@ namespace RayTracing {
 			u.Elements[1] * v.Elements[1],
 			u.Elements[2] * v.Elements[2]);
 	}
-
+	
 	Vector3 operator*(double t, const Vector3& v) {
 		return Vector3(
 			t * v.Elements[0],

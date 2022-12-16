@@ -6,10 +6,11 @@ namespace RayTracing {
 	class Vector3
 	{
 	public:
+		double Elements[3];
+
 		Vector3();
 		Vector3(double element0, double element1, double element2);
 
-		double Elements[3];
 
 		double X() const;
 		double Y() const;

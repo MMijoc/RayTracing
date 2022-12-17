@@ -8,6 +8,8 @@
 
 using namespace RayTracing;
 Color RayColor(const Ray& ray);
+bool HitSphere(const Point3& center, double radius, const Ray& ray);
+
 
 int main()
 {
@@ -59,11 +61,26 @@ void CreateImageFile()
 }
 
 Color RayColor(const Ray& ray) {
-	// Lighter gradient with smaler y coordinate
+
+	Point3 sphereCenter = Point3(0, 0, 1);
+	double sphereRadius = 0.5;
+
+	if (HitSphere(sphereCenter, sphereRadius, ray))
+		return Color(1, 0, 0);
+
 	Vector3 unitDirection = UnitVector(ray.GetDirection()); // Unit vector of direction
 	double t = 0.5 * (unitDirection.Y() + 1.0); // we scale t betweene 0 and 1, t depends on y axis of vector direction
 	// blendedValue = (1−t)*startValue + t*endValue <- linar interpolation
 	//              multiplyer * endColor            multiplyer * start color            
 	auto rayColor = (1.0 - t) * Color(0.0, 1.0, 0.0) + t * Color(0.5, 0.7, 1.0);
 	return rayColor;
+}
+
+bool HitSphere(const Point3& center, double radius, const Ray& ray) {
+	Vector3 oc = ray.GetOrigin() - center;
+	auto a = Dot(ray.GetDirection(), ray.GetDirection());
+	auto b = 2.0 * Dot(oc, ray.GetDirection());
+	auto c = Dot(oc, oc) - radius*radius;
+	auto discriminant = b*b - 4*a*c;
+	return (discriminant > 0);
 }

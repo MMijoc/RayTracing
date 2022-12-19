@@ -44,7 +44,7 @@ void CreateImageFile()
 	ppmImageFile << "P3\n" << imageWidth << ' ' << imageHeight << "\n255\n";
 
 	for (int j = imageHeight - 1; j >= 0; --j) {
-		std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush; // progress indicator
+		std::cerr << "\rScan-lines remaining: " << j << ' ' << std::flush; // progress indicator
 		for (int i = 0; i < imageWidth; ++i) {
 			auto u = double(i) / (imageWidth - 1);
 			auto v = double(j) / (imageHeight - 1);

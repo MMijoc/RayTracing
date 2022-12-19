@@ -84,27 +84,17 @@ Color RayColor(const Ray& ray)
 
 double HitSphere(const Point3& sphereCenter, double sphereRadius, const Ray& ray)
 {
-	// Sphere equation (in vector form):
-	// (A + tB - C)^2 - r^2 = 0
-	// b*b*(t^2) + (A-C)*2B*(t) + (A-C)(A-C)-r^2 = 0
-	//
-	// a = b*b
-	// b = (A-C)*2*B
-	// c = (A-C)(A-C)-r^2
-	// Solve for t using quadratic equation
-	// if t>=0 the ray did hit the sphere
 	Vector3 oc = ray.GetOrigin() - sphereCenter;
-	auto a = Dot(ray.GetDirection(), ray.GetDirection());
-	auto b = 2.0 * Dot(oc, ray.GetDirection());
-	auto c = Dot(oc, oc) - sphereRadius * sphereRadius;
-	auto discriminant = b * b - 4 * a * c;
+	auto a = ray.GetDirection().LengthSquared();
+	auto bHalf = Dot(oc, ray.GetDirection());
+	auto c = oc.LengthSquared() - sphereRadius * sphereRadius;
+	auto discriminant = bHalf * bHalf -  a * c;
 
 	if (discriminant < 0) {
 		// No real solutions
-		return -1;
+		return -1.0;
 	} else {
-		double t1 =  (-b - sqrt(discriminant)) / (2.0 * a);
-		//double t2 =  (-b + sqrt(discriminant)) / (2.0 * a);
+		double t1 =  (-bHalf - sqrt(discriminant)) / a;
 		return t1;
 	}
 }

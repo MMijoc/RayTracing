@@ -1,13 +1,16 @@
 ﻿#include <iostream>
 #include <fstream>
 
-#include "Source.h"
 #include "Vector3.h"
 #include "Color.h"
 #include "Ray.h"
 
+
 using namespace RayTracing;
 
+void CreateImageFile();
+Color RayColor(const Ray& ray);
+double HitSphere(const Point3& center, double radius, const Ray& ray);
 
 int main()
 {
@@ -45,8 +48,9 @@ void CreateImageFile()
 		for (int i = 0; i < imageWidth; ++i) {
 			auto u = double(i) / (imageWidth - 1);
 			auto v = double(j) / (imageHeight - 1);
-			Ray r(origin, lowerLeftCorner + u * horizontal + v * vertical - origin);
-			Color pixelColor = RayColor(r);
+			Point3 currentDirection = lowerLeftCorner + u * horizontal + v * vertical - origin;
+			Ray r(origin,currentDirection);
+			Vector3 pixelColor = RayColor(r);
 			WriteColor(ppmImageFile, pixelColor);
 		}
 	}
@@ -57,29 +61,50 @@ void CreateImageFile()
 
 Color RayColor(const Ray& ray)
 {
-	Point3 sphereCenter = Point3(0, 0, 1);
+	Point3 sphereCenter = Point3(0, 0, -1);
 	double sphereRadius = 0.5;
-	Color sphereColor = Color(1, 0, 0);
+	double t = HitSphere(sphereCenter, sphereRadius, ray);
+	bool rayHitsSphere = t > 0;
 
-	if (IsSphereHit(sphereCenter, sphereRadius, ray))
-		return sphereColor;
+	// Normal vectors color map
+	if (rayHitsSphere) {
+		Vector3 normalVector = UnitVector(ray.At(t) - sphereCenter);
+		Color normalVectorColor = 0.5 * Color(normalVector.X() + 1, normalVector.Y() + 1, normalVector.Z() + 1);
+		return normalVectorColor;
+	}
 
 	Vector3 unitDirection = UnitVector(ray.GetDirection());
-	double t = 0.5 * (unitDirection.Y() + 1.0); // we scale t between 0 and 1
+	t = 0.5 * (unitDirection.Y() + 1.0); // we scale t between 0 and 1
 	Color startColor = Color(0, 0.46, 0.72);
 	Color endColor = Color(0.0, 1.0, 0.0);
-	auto rayColor = (1.0 - t) * endColor + (t * startColor);
+	auto backgroundColor = (1.0 - t) * endColor + (t * startColor);
 
-	return rayColor;
+	return backgroundColor;
 }
 
-bool IsSphereHit(const Point3& center, double radius, const Ray& ray)
+double HitSphere(const Point3& sphereCenter, double sphereRadius, const Ray& ray)
 {
-	Vector3 oc = ray.GetOrigin() - center;
+	// Sphere equation (in vector form):
+	// (A + tB - C)^2 - r^2 = 0
+	// b*b*(t^2) + (A-C)*2B*(t) + (A-C)(A-C)-r^2 = 0
+	//
+	// a = b*b
+	// b = (A-C)*2*B
+	// c = (A-C)(A-C)-r^2
+	// Solve for t using quadratic equation
+	// if t>=0 the ray did hit the sphere
+	Vector3 oc = ray.GetOrigin() - sphereCenter;
 	auto a = Dot(ray.GetDirection(), ray.GetDirection());
 	auto b = 2.0 * Dot(oc, ray.GetDirection());
-	auto c = Dot(oc, oc) - radius * radius;
+	auto c = Dot(oc, oc) - sphereRadius * sphereRadius;
 	auto discriminant = b * b - 4 * a * c;
 
-	return (discriminant > 0);
+	if (discriminant < 0) {
+		// No real solutions
+		return -1;
+	} else {
+		double t1 =  (-b - sqrt(discriminant)) / (2.0 * a);
+		//double t2 =  (-b + sqrt(discriminant)) / (2.0 * a);
+		return t1;
+	}
 }

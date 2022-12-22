@@ -1,10 +1,4 @@
-﻿#include <iostream>
-#include <fstream>
-
-#include "Vector3.h"
-#include "Color.h"
-#include "Ray.h"
-
+﻿#include "Source.h"
 
 using namespace RayTracing;
 

@@ -14,13 +14,15 @@ int main()
 
 void CreateImageFile()
 {
+	std::ofstream ppmImageFile;
+	ppmImageFile.open("image.ppm");
+
 	// Image
 	const auto aspectRatio = 16.0 / 9.0;
 	const auto imageWidth = 400;
 	const auto imageHeight = static_cast<int>(imageWidth / aspectRatio);
 
-	std::ofstream ppmImageFile;
-	ppmImageFile.open("image.ppm");
+	// World
 
 
 	// Camera

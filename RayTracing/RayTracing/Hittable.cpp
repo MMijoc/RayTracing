@@ -38,7 +38,8 @@ namespace RayTracing
 
 		hitRecord.t = root;
 		hitRecord.point = ray.At(hitRecord.t);
-		hitRecord.normalVector = (hitRecord.point - Center) / Radius;
+		Vector3 outwardNormal = (hitRecord.point - Center) / Radius;
+		hitRecord.SetFaceNormal(ray, outwardNormal);
 
 		return true;
 	}

@@ -8,6 +8,14 @@ namespace RayTracing
 		Point3 point;
 		Vector3 normalVector;
 		double t;
+		bool frontFace;
+
+		inline void SetFaceNormal(const Ray& ray, const Vector3& outwardNormal)
+		{
+			frontFace = Dot(ray.GetDirection(), outwardNormal) < 0;
+			normalVector = frontFace ? outwardNormal : -outwardNormal;
+		}
+
 	} HitRecord;
 
 	class Hittable

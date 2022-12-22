@@ -4,11 +4,11 @@
 
 namespace RayTracing
 {
-	typedef struct _hitRecord {
+	struct _hitRecord {
 		Point3 point;
 		Vector3 normalVector;
-		double t;
-		bool frontFace;
+		double t = 0;
+		bool frontFace = false;
 
 		inline void SetFaceNormal(const Ray& ray, const Vector3& outwardNormal)
 		{
@@ -16,7 +16,8 @@ namespace RayTracing
 			normalVector = frontFace ? outwardNormal : -outwardNormal;
 		}
 
-	} HitRecord;
+	};
+	typedef _hitRecord HitRecord;
 
 	class Hittable
 	{

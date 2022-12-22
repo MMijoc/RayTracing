@@ -12,10 +12,10 @@ namespace RayTracing {
     class HittableList : public Hittable {
     public:
         HittableList() {}
-        HittableList(shared_ptr<Hittable> object) { add(object); }
+        HittableList(shared_ptr<Hittable> object) { Add(object); }
 
-        void clear() { objects.clear(); }
-        void add(shared_ptr<Hittable> object) { objects.push_back(object); }
+        void Clear() { objects.clear(); }
+        void Add(shared_ptr<Hittable> object) { objects.push_back(object); }
 
         virtual bool Hit(const Ray& ray, double tMin, double tMax, HitRecord& record) const override;
 

@@ -29,7 +29,8 @@ inline double RandomDouble(double min, double max) {
 	return min + (max - min) * RandomDouble();
 }
 
-#include "Ray.h"
-#include "Vector3.h"
-#include "Color.h"
-#include "HittableList.h"
+inline double Clamp(double x, double min, double max) {
+	if (x < min) return min;
+	if (x > max) return max;
+	return x;
+}

@@ -1,4 +1,9 @@
 ﻿#include "Source.h"
+#include "Camera.h"
+#include "Ray.h"
+#include "Vector3.h"
+#include "Color.h"
+#include "HittableList.h"
 
 using namespace RayTracing;
 
@@ -20,6 +25,7 @@ void CreateImageFile()
 	const auto aspectRatio = 16.0 / 9.0;
 	const auto imageWidth = 400;
 	const auto imageHeight = static_cast<int>(imageWidth / aspectRatio);
+	const int samplesPerPixel = 100;
 
 	// World
 	HittableList world;
@@ -27,14 +33,7 @@ void CreateImageFile()
 	world.Add(make_shared<Sphere>(Point3(0, -100.5, -1), 100));
 
 	// Camera
-	auto viewportHeight = 2.0;
-	auto viewportWidth = aspectRatio * viewportHeight;
-	auto focalLength = 1.0;
-
-	auto origin = Point3(0, 0, 0);
-	auto horizontal = Vector3(viewportWidth, 0, 0);
-	auto vertical = Vector3(0, viewportHeight, 0);
-	Point3 lowerLeftCorner = Vector3(-viewportWidth / 2, -viewportHeight / 2, -focalLength);
+	Camera camera;
 
 
 	// Render
@@ -43,12 +42,15 @@ void CreateImageFile()
 	for (int j = imageHeight - 1; j >= 0; --j) {
 		std::cerr << "\rScan-lines remaining: " << j << ' ' << std::flush; // progress indicator
 		for (int i = 0; i < imageWidth; ++i) {
-			auto u = double(i) / (imageWidth - 1);
-			auto v = double(j) / (imageHeight - 1);
-			Point3 currentDirection = lowerLeftCorner + u * horizontal + v * vertical - origin;
-			Ray r(origin,currentDirection);
-			Vector3 pixelColor = RayColor(r, world);
-			WriteColor(ppmImageFile, pixelColor);
+			Color pixelColor = Color(0, 0, 0);
+			for (int s = 0; s < samplesPerPixel; ++s)
+			{
+				auto u = (i + RandomDouble()) / (imageWidth - 1);
+				auto v = (j + RandomDouble()) / (imageHeight - 1);
+				Ray ray = camera.GetRay(u, v);
+				pixelColor += RayColor(ray, world);
+			}
+			WriteColor(ppmImageFile, pixelColor, samplesPerPixel);
 		}
 	}
 	std::cerr << "\nDone.\n";

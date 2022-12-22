@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Source.h"
+#include "Ray.h"
 
 namespace RayTracing
 {

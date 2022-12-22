@@ -139,6 +139,7 @@
     <ClInclude Include="Hittable.h" />
     <ClInclude Include="HittableList.h" />
     <ClInclude Include="Ray.h" />
+    <ClInclude Include="RayTracing.h" />
     <ClInclude Include="Source.h" />
     <ClInclude Include="Vector3.h" />
   </ItemGroup>

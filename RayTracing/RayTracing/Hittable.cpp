@@ -8,37 +8,37 @@ namespace RayTracing
 		Radius = 0;
 	}
 
-	Sphere::Sphere(Point3 center, double radius)
+	Sphere::Sphere(const Point3 center, const double radius)
 	{
 		Center = center;
 		Radius = radius;
 	}
 
-	bool Sphere::Hit(const Ray& ray, double tMin, double tMax, HitRecord& hitRecord) const
+	bool Sphere::Hit(const Ray& ray, const double tMin, double const tMax, HitRecord& hitRecord) const
 	{
-		Vector3 oc = ray.GetOrigin() - Center;
-		double a = ray.GetDirection().LengthSquared();
-		double bHalf = Dot(oc, ray.GetDirection());
-		double c = oc.LengthSquared() - Radius * Radius;
-		double discriminant = bHalf * bHalf -  a * c;
+		const Vector3 oc = ray.GetOrigin() - Center;
+		const double a = ray.GetDirection().LengthSquared();
+		const double bHalf = Dot(oc, ray.GetDirection());
+		const double c = oc.LengthSquared() - Radius * Radius;
+		const double discriminant = bHalf * bHalf -  a * c;
 
 		if (discriminant < 0) {
 			return false;
 		}
 
-		double sqrtd = sqrt(discriminant);
+		const double sqrtD = sqrt(discriminant);
 
 		// Find the nearest root that lies in the acceptable range.
-		auto root = (-bHalf - sqrtd) / a;
+		auto root = (-bHalf - sqrtD) / a;
 		if (root < tMin || tMax < root) {
-			root = (-bHalf + sqrtd) / a;
+			root = (-bHalf + sqrtD) / a;
 			if (root < tMin || tMax < root)
 				return false;
 		}
 
 		hitRecord.t = root;
-		hitRecord.point = ray.At(hitRecord.t);
-		Vector3 outwardNormal = (hitRecord.point - Center) / Radius;
+		hitRecord.HitPoint = ray.At(hitRecord.t);
+		const Vector3 outwardNormal = (hitRecord.HitPoint - Center) / Radius;
 		hitRecord.SetFaceNormal(ray, outwardNormal);
 
 		return true;

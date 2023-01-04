@@ -14,7 +14,7 @@ namespace RayTracing {
 		}
 	}
 
-	Vector3::Vector3(double element0, double element1, double element2)
+	Vector3::Vector3(const double element0, const double element1, const double element2)
 	{
 		Elements[0] = element0;
 		Elements[1] = element1;
@@ -101,18 +101,18 @@ namespace RayTracing {
 			u.Elements[2] * v.Elements[2]);
 	}
 	
-	Vector3 operator*(double t, const Vector3& v) {
+	Vector3 operator*(const double t, const Vector3& v) {
 		return Vector3(
 			t * v.Elements[0],
 			t * v.Elements[1],
 			t * v.Elements[2]);
 	}
 
-	Vector3 operator*(const Vector3& v, double t) {
+	Vector3 operator*(const Vector3& v, const double t) {
 		return t * v;
 	}
 
-	Vector3 operator/(Vector3 v, double t) {
+	Vector3 operator/(const Vector3 v, const double t) {
 		return (1 / t) * v;
 	}
 
@@ -130,7 +130,7 @@ namespace RayTracing {
 			u.Elements[0] * v.Elements[1] - u.Elements[1] * v.Elements[0]);
 	}
 
-	Vector3 UnitVector(Vector3 v) {
+	Vector3 UnitVector(const Vector3 v) {
 		return v / v.Length();
 	}
 

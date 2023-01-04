@@ -2,7 +2,7 @@
 
 namespace RayTracing {
 
-    Ray::Ray() {}
+    Ray::Ray() = default;
 
     Ray::Ray(const Point3& origin, const Vector3& direction)
     {
@@ -21,7 +21,7 @@ namespace RayTracing {
         return Direction;
     }
 
-    Point3 Ray::At(double t) const
+    Point3 Ray::At(const double t) const
     {
         return Origin + (t * Direction);
     }

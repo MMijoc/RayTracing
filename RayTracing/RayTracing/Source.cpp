@@ -13,6 +13,10 @@ Color RayColor(const Ray& ray, const Hittable& world);
 int main()
 {
 	CreateImageFile();
+
+	// Convert .ppm image to .png so it can easily be viewed
+	// Conversion is done using ImageMagic Command-line Tools
+	system("magick convert image.ppm image.png");
 	return 0;
 }
 
@@ -22,10 +26,10 @@ void CreateImageFile()
 	ppmImageFile.open("image.ppm");
 
 	// Image
-	const auto aspectRatio = 16.0 / 9.0;
-	const auto imageWidth = 400;
-	const auto imageHeight = static_cast<int>(imageWidth / aspectRatio);
-	const int samplesPerPixel = 100;
+	constexpr auto aspectRatio = 16.0 / 9.0;
+	constexpr auto imageWidth = 400;
+	constexpr auto imageHeight = static_cast<int>(imageWidth / aspectRatio);
+	constexpr int samplesPerPixel = 100;
 
 	// World
 	HittableList world;
@@ -42,11 +46,11 @@ void CreateImageFile()
 	for (int j = imageHeight - 1; j >= 0; --j) {
 		std::cerr << "\rScan-lines remaining: " << j << ' ' << std::flush; // progress indicator
 		for (int i = 0; i < imageWidth; ++i) {
-			Color pixelColor = Color(0, 0, 0);
+			auto pixelColor = Color(0, 0, 0);
 			for (int s = 0; s < samplesPerPixel; ++s)
 			{
-				auto u = (i + RandomDouble()) / (imageWidth - 1);
-				auto v = (j + RandomDouble()) / (imageHeight - 1);
+				const auto u = (i + RandomDouble()) / (imageWidth - 1);
+				const auto v = (j + RandomDouble()) / (imageHeight - 1);
 				Ray ray = camera.GetRay(u, v);
 				pixelColor += RayColor(ray, world);
 			}
@@ -63,15 +67,15 @@ Color RayColor(const Ray& ray, const Hittable& world)
 	HitRecord record;
 
 	if (world.Hit(ray, 0, INF, record)) {
-		return 0.5 * (record.normalVector + Color(1, 1, 1));
+		return 0.5 * (record.NormalVector + Color(1, 1, 1));
 	}
 
-	Vector3 unitDirection = UnitVector(ray.GetDirection());
-	auto t = 0.5 * (unitDirection.Y() + 1.0);
+	const Vector3 unitDirection = UnitVector(ray.GetDirection());
+	const auto t = 0.5 * (unitDirection.Y() + 1.0);
 
-	Color startColor = Color(0.5, 0.7, 1.0);
-	Color endColor = Color(1.0, 1.0, 1.0);
-	auto resultColor = (1.0 - t) * endColor + (t * startColor);
+	const auto startColor = Color(0.5, 0.7, 1.0);
+	const auto endColor = Color(1.0, 1.0, 1.0);
+	const auto resultColor = (1.0 - t) * endColor + (t * startColor);
 
 	return resultColor;
 }

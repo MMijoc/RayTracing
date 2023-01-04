@@ -24,9 +24,6 @@ namespace RayTracing {
 		Vector3& operator/=(const double t);
 		double operator[](int i) const;
 		double& operator[](int i);
-
-	private:
-
 	};
 
 	std::ostream& operator<<(std::ostream& out, const Vector3& v);
@@ -40,6 +37,6 @@ namespace RayTracing {
 	Vector3 Cross(const Vector3& u, const Vector3& v);
 	Vector3 UnitVector(Vector3 v);
 
-	using Point3 = Vector3;   // 3D point
+	using Point3 = Vector3;   // 3D HitPoint
 	using Color = Vector3;    // RGB color
 }

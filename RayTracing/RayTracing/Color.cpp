@@ -3,14 +3,14 @@
 
 namespace RayTracing {
 
-    void WriteColor(std::ostream &out, Color pixelColor, int samplesPerPixel) 
+    void WriteColor(std::ostream &out, const Color pixelColor, const int samplesPerPixel) 
     {
         auto r = pixelColor.X();
         auto g = pixelColor.Y();
         auto b = pixelColor.Z();
 
         // Divide the color by the number of samples.
-        auto scale = 1.0 / samplesPerPixel;
+        const auto scale = 1.0 / samplesPerPixel;
         r *= scale;
         g *= scale;
         b *= scale;

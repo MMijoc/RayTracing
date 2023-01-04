@@ -4,27 +4,26 @@
 
 namespace RayTracing
 {
-	struct _hitRecord {
-		Point3 point;
-		Vector3 normalVector;
+	class HitRecord {
+	public:
+		Point3 HitPoint;
+		Vector3 NormalVector;
 		double t = 0;
-		bool frontFace = false;
+		bool IsFrontFace = false;
 
-		inline void SetFaceNormal(const Ray& ray, const Vector3& outwardNormal)
+		void SetFaceNormal(const Ray& ray, const Vector3& outwardNormal)
 		{
-			frontFace = Dot(ray.GetDirection(), outwardNormal) < 0;
-			normalVector = frontFace ? outwardNormal : -outwardNormal;
+			IsFrontFace = Dot(ray.GetDirection(), outwardNormal) < 0;
+			NormalVector = IsFrontFace ? outwardNormal : -outwardNormal;
 		}
 
 	};
-	typedef _hitRecord HitRecord;
+
 
 	class Hittable
 	{
 	public:
-		virtual bool Hit(const Ray& ray, double tMin, double tMax, HitRecord& hitRecord) const = 0;
-
-	private:
+		virtual inline bool Hit(const Ray& ray, double tMin, double tMax, HitRecord& hitRecord) const = 0;
 
 	};
 

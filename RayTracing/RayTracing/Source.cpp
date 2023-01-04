@@ -64,7 +64,7 @@ void CreateImageFile()
 	ppmImageFile.close();
 }
 
-Color RayColor(const Ray& ray, const Hittable& world, int depth)
+Color RayColor(const Ray& ray, const Hittable& world, const int depth)
 {
 	HitRecord hitRecord;
 
@@ -72,7 +72,7 @@ Color RayColor(const Ray& ray, const Hittable& world, int depth)
 	if (depth <= 0)
 		return Color(0, 0, 0);
 
-	if (world.Hit(ray, 0, INF, hitRecord)) {
+	if (world.Hit(ray, 0.001, INF, hitRecord)) {
 		const Point3 target = hitRecord.Point + hitRecord.NormalVector + RandomPointInUintSphere();
 		return 0.5 * RayColor(Ray(hitRecord.Point, target - hitRecord.Point), world, depth - 1);
 	}

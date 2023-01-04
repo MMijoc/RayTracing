@@ -4,11 +4,12 @@
 #include "Vector3.h"
 #include "Color.h"
 #include "HittableList.h"
+#include "RayTracing.h"
 
 using namespace RayTracing;
 
 void CreateImageFile();
-Color RayColor(const Ray& ray, const Hittable& world);
+Color RayColor(const Ray& ray, const Hittable& world, int depth);
 
 int main()
 {
@@ -30,6 +31,7 @@ void CreateImageFile()
 	constexpr auto imageWidth = 400;
 	constexpr auto imageHeight = static_cast<int>(imageWidth / aspectRatio);
 	constexpr int samplesPerPixel = 100;
+	constexpr int maxDepth = 50;
 
 	// World
 	HittableList world;
@@ -37,7 +39,7 @@ void CreateImageFile()
 	world.Add(make_shared<Sphere>(Point3(0, -100.5, -1), 100));
 
 	// Camera
-	Camera camera;
+	const Camera camera;
 
 
 	// Render
@@ -52,7 +54,7 @@ void CreateImageFile()
 				const auto u = (i + RandomDouble()) / (imageWidth - 1);
 				const auto v = (j + RandomDouble()) / (imageHeight - 1);
 				Ray ray = camera.GetRay(u, v);
-				pixelColor += RayColor(ray, world);
+				pixelColor += RayColor(ray, world, maxDepth);
 			}
 			WriteColor(ppmImageFile, pixelColor, samplesPerPixel);
 		}
@@ -62,12 +64,17 @@ void CreateImageFile()
 	ppmImageFile.close();
 }
 
-Color RayColor(const Ray& ray, const Hittable& world)
+Color RayColor(const Ray& ray, const Hittable& world, int depth)
 {
-	HitRecord record;
+	HitRecord hitRecord;
 
-	if (world.Hit(ray, 0, INF, record)) {
-		return 0.5 * (record.NormalVector + Color(1, 1, 1));
+	// If we've exceeded the ray bounce limit, no more light is gathered.
+	if (depth <= 0)
+		return Color(0, 0, 0);
+
+	if (world.Hit(ray, 0, INF, hitRecord)) {
+		const Point3 target = hitRecord.Point + hitRecord.NormalVector + RandomPointInUintSphere();
+		return 0.5 * RayColor(Ray(hitRecord.Point, target - hitRecord.Point), world, depth - 1);
 	}
 
 	const Vector3 unitDirection = UnitVector(ray.GetDirection());

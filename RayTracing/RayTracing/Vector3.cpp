@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "Vector3.h"
+#include "RayTracing.h"
 
 using std::sqrt;
 
@@ -134,4 +135,27 @@ namespace RayTracing {
 		return v / v.Length();
 	}
 
+
+
+
+	Vector3 Vector3::Random()
+	{
+		return Vector3(RandomDouble(), RandomDouble(), RandomDouble());
+	}
+
+	Vector3 Vector3::Random(const double min, const double max)
+	{
+		return Vector3(RandomDouble(min,max), RandomDouble(min,max), RandomDouble(min,max));
+	}
+
+	Point3 RandomPointInUintSphere()
+	{
+		// Create a random point in unit cube
+		// if that point is not in the sphere try another one
+		while (true) {
+			auto p = Vector3::Random(-1,1);
+			if (p.LengthSquared() >= 1) continue;
+			return p;
+		}
+	}
 }

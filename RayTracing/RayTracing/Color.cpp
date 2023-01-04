@@ -1,5 +1,5 @@
 #include "Color.h"
-#include "Source.h"
+#include "RayTracing.h"
 
 namespace RayTracing {
 

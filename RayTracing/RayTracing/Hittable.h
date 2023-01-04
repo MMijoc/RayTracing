@@ -6,7 +6,7 @@ namespace RayTracing
 {
 	class HitRecord {
 	public:
-		Point3 HitPoint;
+		Point3 Point;
 		Vector3 NormalVector;
 		double t = 0;
 		bool IsFrontFace = false;

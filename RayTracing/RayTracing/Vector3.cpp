@@ -158,4 +158,18 @@ namespace RayTracing {
 			return p;
 		}
 	}
+
+	Vector3 RandomUnitVector()
+	{
+		return UnitVector(RandomPointInUintSphere());
+	}
+
+	Vector3 RandomInHemisphere(const Vector3& normal)
+	{
+		const Vector3 inUnitSphere = RandomPointInUintSphere();
+		if (Dot(inUnitSphere, normal) > 0.0) // In the same hemisphere as the normal
+			return inUnitSphere;
+
+		return -inUnitSphere;
+	}
 }

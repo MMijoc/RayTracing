@@ -73,7 +73,8 @@ Color RayColor(const Ray& ray, const Hittable& world, const int depth)
 		return Color(0, 0, 0);
 
 	if (world.Hit(ray, 0.001, INF, hitRecord)) {
-		const Point3 target = hitRecord.Point + hitRecord.NormalVector + RandomPointInUintSphere();
+		//const Point3 target = hitRecord.Point + hitRecord.NormalVector + RandomUnitVector();
+		const Point3 target = hitRecord.Point + RandomInHemisphere(hitRecord.NormalVector);
 		return 0.5 * RayColor(Ray(hitRecord.Point, target - hitRecord.Point), world, depth - 1);
 	}
 

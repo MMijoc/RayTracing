@@ -43,5 +43,6 @@ namespace RayTracing {
 	Vector3 UnitVector(Vector3 v);
 
 	Point3 RandomPointInUintSphere();
-
+	Vector3 RandomUnitVector();
+	Vector3 RandomInHemisphere(const Vector3& normal);
 }

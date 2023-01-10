@@ -27,6 +27,8 @@ namespace RayTracing {
 
 		static Vector3 Random();
 		static Vector3 Random(double min, double max);
+
+		bool IsNearZero() const;
 	};
 	using Point3 = Vector3;   // 3D Point
 	using Color = Vector3;    // RGB color
@@ -45,4 +47,5 @@ namespace RayTracing {
 	Point3 RandomPointInUintSphere();
 	Vector3 RandomUnitVector();
 	Vector3 RandomInHemisphere(const Vector3& normal);
+	
 }

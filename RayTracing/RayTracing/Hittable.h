@@ -43,7 +43,7 @@ namespace RayTracing
 		Sphere();
 		Sphere(Point3 center, double radius, shared_ptr<Material> materialPtr);
 
-		virtual bool Hit(const Ray& ray, double tMin, double tMax, HitRecord& hitRecord) const override;
+		bool Hit(const Ray& ray, double tMin, double tMax, HitRecord& hitRecord) const override;
 	};
 
 }

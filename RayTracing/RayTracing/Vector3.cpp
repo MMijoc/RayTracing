@@ -172,4 +172,11 @@ namespace RayTracing {
 
 		return -inUnitSphere;
 	}
+
+	bool Vector3::IsNearZero() const
+	{
+		// Return true if the vector is close to zero in all dimensions.
+		constexpr  auto s = 1e-8;
+		return (fabs(Elements[0]) < s) && (fabs(Elements[1]) < s) && (fabs(Elements[2]) < s);
+	}
 }

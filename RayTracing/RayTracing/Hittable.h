@@ -2,12 +2,18 @@
 
 #include "Ray.h"
 
+using std::shared_ptr;
+
+
 namespace RayTracing
 {
+	class Material;
+
 	class HitRecord {
 	public:
 		Point3 Point;
 		Vector3 NormalVector;
+		shared_ptr<Material> MaterialPtr;
 		double t = 0;
 		bool IsFrontFace = false;
 
@@ -24,6 +30,7 @@ namespace RayTracing
 	{
 	public:
 		virtual inline bool Hit(const Ray& ray, double tMin, double tMax, HitRecord& hitRecord) const = 0;
+		virtual ~Hittable() = default;
 
 	};
 
@@ -31,9 +38,10 @@ namespace RayTracing
 	public:
 		Point3 Center;
 		double Radius;
+		shared_ptr<Material> MaterialPtr;
 
 		Sphere();
-		Sphere(Point3 center, double radius);
+		Sphere(Point3 center, double radius, shared_ptr<Material> materialPtr);
 
 		virtual bool Hit(const Ray& ray, double tMin, double tMax, HitRecord& hitRecord) const override;
 	};

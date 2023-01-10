@@ -8,10 +8,11 @@ namespace RayTracing
 		Radius = 0;
 	}
 
-	Sphere::Sphere(const Point3 center, const double radius)
+	Sphere::Sphere(const Point3 center, const double radius, const shared_ptr<Material> materialPtr)
 	{
 		Center = center;
 		Radius = radius;
+		MaterialPtr = materialPtr;
 	}
 
 	bool Sphere::Hit(const Ray& ray, const double tMin, double const tMax, HitRecord& hitRecord) const
@@ -40,7 +41,7 @@ namespace RayTracing
 		hitRecord.Point = ray.At(hitRecord.t);
 		const Vector3 outwardNormal = (hitRecord.Point - Center) / Radius;
 		hitRecord.SetFaceNormal(ray, outwardNormal);
-
+		hitRecord.MaterialPtr = MaterialPtr;
 		return true;
 	}
 

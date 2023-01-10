@@ -1,6 +1,10 @@
 #pragma once
 #include <cstdlib>
 
+using std::shared_ptr;
+using std::make_shared;
+using std::sqrt;
+
 const double INF = std::numeric_limits<double>::infinity();
 constexpr double PI = 3.1415926535897932385;
 

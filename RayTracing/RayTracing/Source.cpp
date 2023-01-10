@@ -4,6 +4,7 @@
 #include "Vector3.h"
 #include "Color.h"
 #include "HittableList.h"
+#include "Material.h"
 #include "RayTracing.h"
 
 using namespace RayTracing;
@@ -35,8 +36,17 @@ void CreateImageFile()
 
 	// World
 	HittableList world;
-	world.Add(make_shared<Sphere>(Point3(0, 0, -1), 0.5));
-	world.Add(make_shared<Sphere>(Point3(0, -100.5, -1), 100));
+
+	auto materialGround = make_shared<Lambertian>(Color(0.8, 0.8, 0.0));
+	auto materialCenter = make_shared<Lambertian>(Color(0.7, 0.3, 0.3));
+	auto materialLeft   = make_shared<Metal>(Color(0.8, 0.8, 0.8));
+	auto materialRight  = make_shared<Metal>(Color(0.8, 0.6, 0.2));
+
+	world.Add(make_shared<Sphere>(Point3( 0.0, -100.5, -1.0), 100.0, materialGround));
+	world.Add(make_shared<Sphere>(Point3( 0.0,    0.0, -1.0),   0.5, materialCenter));
+	world.Add(make_shared<Sphere>(Point3(-1.0,    0.0, -1.0),   0.5, materialLeft));
+	world.Add(make_shared<Sphere>(Point3( 1.0,    0.0, -1.0),   0.5, materialRight));
+
 
 	// Camera
 	const Camera camera;
@@ -74,8 +84,15 @@ Color RayColor(const Ray& ray, const Hittable& world, const int depth)
 
 	if (world.Hit(ray, 0.001, INF, hitRecord)) {
 		//const Point3 target = hitRecord.Point + hitRecord.NormalVector + RandomUnitVector();
-		const Point3 target = hitRecord.Point + RandomInHemisphere(hitRecord.NormalVector);
-		return 0.5 * RayColor(Ray(hitRecord.Point, target - hitRecord.Point), world, depth - 1);
+		//const Point3 target = hitRecord.Point + RandomInHemisphere(hitRecord.NormalVector);
+		Ray scatteredRay;
+		Color attenuation;
+		if (hitRecord.MaterialPtr->Scatter(ray, hitRecord, attenuation, scatteredRay))
+			return attenuation * RayColor(scatteredRay, world, depth - 1);
+
+		return Color(0, 0, 0);
+
+		//return 0.5 * RayColor(Ray(hitRecord.Point, target - hitRecord.Point), world, depth - 1);
 	}
 
 	const Vector3 unitDirection = UnitVector(ray.GetDirection());

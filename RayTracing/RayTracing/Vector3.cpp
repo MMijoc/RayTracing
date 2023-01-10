@@ -101,7 +101,7 @@ namespace RayTracing {
 			u.Elements[1] * v.Elements[1],
 			u.Elements[2] * v.Elements[2]);
 	}
-	
+
 	Vector3 operator*(const double t, const Vector3& v) {
 		return Vector3(
 			t * v.Elements[0],
@@ -145,7 +145,7 @@ namespace RayTracing {
 
 	Vector3 Vector3::Random(const double min, const double max)
 	{
-		return Vector3(RandomDouble(min,max), RandomDouble(min,max), RandomDouble(min,max));
+		return Vector3(RandomDouble(min, max), RandomDouble(min, max), RandomDouble(min, max));
 	}
 
 	Point3 RandomPointInUintSphere()
@@ -153,7 +153,7 @@ namespace RayTracing {
 		// Create a random point in unit cube
 		// if that point is not in the sphere try another one
 		while (true) {
-			auto p = Vector3::Random(-1,1);
+			auto p = Vector3::Random(-1, 1);
 			if (p.LengthSquared() >= 1) continue;
 			return p;
 		}
@@ -178,5 +178,9 @@ namespace RayTracing {
 		// Return true if the vector is close to zero in all dimensions.
 		constexpr  auto s = 1e-8;
 		return (fabs(Elements[0]) < s) && (fabs(Elements[1]) < s) && (fabs(Elements[2]) < s);
+	}
+
+	Vector3 Reflect(const Vector3& v, const Vector3& n) {
+		return v - 2 * Dot(v, n) * n;
 	}
 }

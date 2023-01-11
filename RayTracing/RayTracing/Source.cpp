@@ -35,25 +35,31 @@ void CreateImageFile()
 	constexpr int maxDepth = 50;
 
 	// World
-
-
-	//auto materialGround = make_shared<Lambertian>(Color(0.8, 0.8, 0.0));
-	//auto materialCenter = make_shared<Lambertian>(Color(0.1, 0.2, 0.5));
-	//auto materialLeft   = make_shared<Dielectric>(1.5);
-	//auto materialRight  = make_shared<Metal>(Color(0.8, 0.6, 0.2), 1.0);
-
 	HittableList world;
-	auto R = cos(PI / 4);
 
-	auto materialLeft  = make_shared<Lambertian>(Color(0,0,1));
-	auto materialRight = make_shared<Lambertian>(Color(1,0,0));
+	auto materialGround = make_shared<Lambertian>(Color(0.8, 0.8, 0.0));
+	auto materialCenter = make_shared<Lambertian>(Color(0.1, 0.2, 0.5));
+	auto materialLeft   = make_shared<Dielectric>(1.5);
+	auto materialRight  = make_shared<Metal>(Color(0.8, 0.6, 0.2), 1.0);
 
-	world.Add(make_shared<Sphere>(Point3( R, 0, -1), R, materialRight));
-	world.Add(make_shared<Sphere>(Point3(-R, 0, -1), R, materialLeft));
+	world.Add(make_shared<Sphere>(Point3( 0.0, -100.5, -1.0), 100.0, materialGround));
+	world.Add(make_shared<Sphere>(Point3( 0.0,    0.0, -1.0),   0.5, materialCenter));
+	world.Add(make_shared<Sphere>(Point3(-1.0,    0.0, -1.0),   0.5, materialLeft));
+	world.Add(make_shared<Sphere>(Point3(-1.0,    0.0, -1.0), -0.45, materialLeft));
+	world.Add(make_shared<Sphere>(Point3( 1.0,    0.0, -1.0),   0.5, materialRight));
+
+
+	//auto R = cos(PI / 4);
+
+	//auto materialLeft  = make_shared<Lambertian>(Color(0,0,1));
+	//auto materialRight = make_shared<Lambertian>(Color(1,0,0));
+
+	//world.Add(make_shared<Sphere>(Point3( R, 0, -1), R, materialRight));
+	//world.Add(make_shared<Sphere>(Point3(-R, 0, -1), R, materialLeft));
 
 
 	// Camera
-	const Camera camera(90.0, aspectRatio);
+	const Camera camera(Point3(-2,2,1), Point3(0,0,-1), Vector3(0,1,0), 90, aspectRatio);
 
 
 	// Render

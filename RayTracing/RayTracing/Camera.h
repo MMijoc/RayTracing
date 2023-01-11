@@ -6,9 +6,9 @@ namespace RayTracing
 {
 	class Camera {
 	public:
-		Camera(double verticalFieldOfView, double aspectRatio);
+		Camera(Point3 lookFrom, Point3 lookAt, Point3 viewUp, double verticalFieldOfView, double aspectRatio);
 
-		Ray GetRay(double u, double v) const;
+		Ray GetRay(double s, double t) const;
 
 	private:
 		Point3 _origin;

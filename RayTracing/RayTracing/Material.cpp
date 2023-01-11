@@ -1,7 +1,7 @@
 #pragma once
 #include "Material.h"
-
 #include "Hittable.h"
+#include "RayTracing.h"
 
 namespace RayTracing
 {
@@ -48,24 +48,29 @@ namespace RayTracing
 	bool Dielectric::Scatter(const Ray& rayIn, const HitRecord& hitRecord, Color& attenuation, Ray& scattered) const
 	{
 		attenuation = Color(1.0, 1.0, 1.0);
-		const double refractionRatio = hitRecord.IsFrontFace ? (1.0/IndexOfRefraction) : IndexOfRefraction;
+		const double refractionRatio = hitRecord.IsFrontFace ? (1.0 / IndexOfRefraction) : IndexOfRefraction;
 
 		const Vector3 unitDirection = UnitVector(rayIn.GetDirection());
 		const double cosTheta = fmin(Dot(-unitDirection, hitRecord.NormalVector), 1.0);
-		const double sinTheta = sqrt(1.0 - cosTheta*cosTheta);
+		const double sinTheta = sqrt(1.0 - cosTheta * cosTheta);
 
 		const bool cannotRefract = refractionRatio * sinTheta > 1.0;
 		Vector3 direction;
 
-		if (cannotRefract)
+		if (cannotRefract || Reflectance(cosTheta, refractionRatio) > RandomDouble())
 			direction = Reflect(unitDirection, hitRecord.NormalVector);
 		else
 			direction = Refract(unitDirection, hitRecord.NormalVector, refractionRatio);
 
 		scattered = Ray(hitRecord.Point, direction);
 
-
-
 		return true;
+	}
+
+	double Dielectric::Reflectance(double cosine, double refractionIndex) {
+		// Use Schlick's approximation for reflectance.
+		auto r0 = (1 - refractionIndex) / (1 + refractionIndex);
+		r0 = r0 * r0;
+		return r0 + (1 - r0) * pow((1 - cosine), 5);
 	}
 }

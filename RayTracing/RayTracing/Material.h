@@ -43,5 +43,8 @@ namespace RayTracing
 		Dielectric(double indexOfRefraction);
 
 		bool Scatter(const Ray& rayIn, const HitRecord& hitRecord, Color& attenuation, Ray& scattered) const override;
+
+	private:
+		static double Reflectance(double cosine, double refractionIndex);
 	};
 }

@@ -40,7 +40,7 @@ namespace RayTracing
 		return (Dot(scattered.GetDirection(), hitRecord.NormalVector) > 0);
 	}
 
-	Dielectric::Dielectric(double indexOfRefraction)
+	Dielectric::Dielectric(const double indexOfRefraction)
 	{
 		IndexOfRefraction = indexOfRefraction;
 	}
@@ -51,9 +51,21 @@ namespace RayTracing
 		const double refractionRatio = hitRecord.IsFrontFace ? (1.0/IndexOfRefraction) : IndexOfRefraction;
 
 		const Vector3 unitDirection = UnitVector(rayIn.GetDirection());
-		const Vector3 refracted = Refract(unitDirection, hitRecord.NormalVector, refractionRatio);
+		const double cosTheta = fmin(Dot(-unitDirection, hitRecord.NormalVector), 1.0);
+		const double sinTheta = sqrt(1.0 - cosTheta*cosTheta);
 
-		scattered = Ray(hitRecord.Point, refracted);
+		const bool cannotRefract = refractionRatio * sinTheta > 1.0;
+		Vector3 direction;
+
+		if (cannotRefract)
+			direction = Reflect(unitDirection, hitRecord.NormalVector);
+		else
+			direction = Refract(unitDirection, hitRecord.NormalVector, refractionRatio);
+
+		scattered = Ray(hitRecord.Point, direction);
+
+
+
 		return true;
 	}
 }

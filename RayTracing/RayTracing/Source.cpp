@@ -38,7 +38,7 @@ void CreateImageFile()
 	HittableList world;
 
 	auto materialGround = make_shared<Lambertian>(Color(0.8, 0.8, 0.0));
-	auto materialCenter = make_shared<Dielectric>(1.5);
+	auto materialCenter = make_shared<Lambertian>(Color(0.1, 0.2, 0.5));
 	auto materialLeft   = make_shared<Dielectric>(1.5);
 	auto materialRight  = make_shared<Metal>(Color(0.8, 0.6, 0.2), 1.0);
 

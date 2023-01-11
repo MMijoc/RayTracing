@@ -40,4 +40,20 @@ namespace RayTracing
 		return (Dot(scattered.GetDirection(), hitRecord.NormalVector) > 0);
 	}
 
+	Dielectric::Dielectric(double indexOfRefraction)
+	{
+		IndexOfRefraction = indexOfRefraction;
+	}
+
+	bool Dielectric::Scatter(const Ray& rayIn, const HitRecord& hitRecord, Color& attenuation, Ray& scattered) const
+	{
+		attenuation = Color(1.0, 1.0, 1.0);
+		const double refractionRatio = hitRecord.IsFrontFace ? (1.0/IndexOfRefraction) : IndexOfRefraction;
+
+		const Vector3 unitDirection = UnitVector(rayIn.GetDirection());
+		const Vector3 refracted = Refract(unitDirection, hitRecord.NormalVector, refractionRatio);
+
+		scattered = Ray(hitRecord.Point, refracted);
+		return true;
+	}
 }

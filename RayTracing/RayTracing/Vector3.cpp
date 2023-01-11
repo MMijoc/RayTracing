@@ -183,4 +183,11 @@ namespace RayTracing {
 	Vector3 Reflect(const Vector3& v, const Vector3& n) {
 		return v - 2 * Dot(v, n) * n;
 	}
+
+	Vector3 Refract(const Vector3& uv, const Vector3& n, double etaiOverEtat) {
+		const auto cosTheta = fmin(Dot(-uv, n), 1.0);
+		const Vector3 rOutPerp =  etaiOverEtat * (uv + cosTheta*n);
+		const Vector3 rOutParallel = -sqrt(fabs(1.0 - rOutPerp.LengthSquared())) * n;
+		return rOutPerp + rOutParallel;
+	}
 }

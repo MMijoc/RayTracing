@@ -59,7 +59,12 @@ void CreateImageFile()
 
 
 	// Camera
-	const Camera camera(Point3(-2,2,1), Point3(0,0,-1), Vector3(0,1,0), 90, aspectRatio);
+
+	//Distant view
+	//const Camera camera(Point3(-2,2,1), Point3(0,0,-1), Vector3(0,1,0), 90, aspectRatio);
+
+	//Closer view
+	const Camera camera(Point3(-2,2,1), Point3(0,0,-1), Vector3(0,1,0), 20, aspectRatio);
 
 
 	// Render

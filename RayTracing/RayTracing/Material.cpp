@@ -24,15 +24,17 @@ namespace RayTracing
 		return true;
 	}
 
-	Metal::Metal(const Color& albedo)
+	Metal::Metal(const Color& albedo, const double fuzziness)
 	{
 		Albedo = albedo;
+		Fuzziness = fuzziness;
 	}
 
 	bool Metal::Scatter(const Ray& rayIn, const HitRecord& hitRecord, Color& attenuation, Ray& scattered) const
 	{
 		const Vector3 reflected = Reflect(UnitVector(rayIn.GetDirection()), hitRecord.NormalVector);
-		scattered = Ray(hitRecord.Point, reflected);
+
+		scattered = Ray(hitRecord.Point, reflected + Fuzziness * RandomPointInUintSphere());
 		attenuation = Albedo;
 
 		return (Dot(scattered.GetDirection(), hitRecord.NormalVector) > 0);

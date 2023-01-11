@@ -23,7 +23,7 @@ namespace RayTracing {
         std::vector<shared_ptr<Hittable>> Objects;
     };
 
-    bool HittableList::Hit(const Ray& ray, const double tMin, double const tMax, HitRecord& record) const {
+    inline bool HittableList::Hit(const Ray& ray, const double tMin, double const tMax, HitRecord& record) const {
         HitRecord tempRecord;
         bool hitAnything = false;
         auto closestSoFar = tMax;

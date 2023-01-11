@@ -27,8 +27,9 @@ namespace RayTracing
 	class Metal : public Material {
 	public:
 		Color Albedo;
+		double Fuzziness;
 
-		explicit Metal(const Color& albedo);
+		explicit Metal(const Color& albedo, double fuzziness);
 
 
 		bool Scatter(const Ray& rayIn, const HitRecord& hitRecord, Color& attenuation, Ray& scattered) const override;

@@ -64,7 +64,13 @@ void CreateImageFile()
 	//const Camera camera(Point3(-2,2,1), Point3(0,0,-1), Vector3(0,1,0), 90, aspectRatio);
 
 	//Closer view
-	const Camera camera(Point3(-2,2,1), Point3(0,0,-1), Vector3(0,1,0), 20, aspectRatio);
+	const auto lookFrom = Point3(3, 3, 2);
+	const auto lookAt = Point3(0, 0, -1);
+	const auto viewUp = Vector3(0, 1, 0);
+	const auto distanceToFocus = (lookFrom - lookAt).Length();
+	constexpr auto aperture = 2.0;
+	constexpr auto verticalFiledOfView = 20.0;
+	const Camera camera(lookFrom, lookAt, viewUp, verticalFiledOfView, aspectRatio, aperture, distanceToFocus);
 
 
 	// Render

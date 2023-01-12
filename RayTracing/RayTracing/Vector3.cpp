@@ -159,6 +159,17 @@ namespace RayTracing {
 		}
 	}
 
+	Vector3 RandomPointInUnitDisk()
+	{
+		while (true) {
+			auto point = Vector3(RandomDouble(-1, 1), RandomDouble(-1, 1), 0);
+			if (point.LengthSquared() >= 1)
+				continue;
+
+			return point;
+		}
+	}
+
 	Vector3 RandomUnitVector()
 	{
 		return UnitVector(RandomPointInUintSphere());
@@ -186,7 +197,7 @@ namespace RayTracing {
 
 	Vector3 Refract(const Vector3& uv, const Vector3& n, double etaiOverEtat) {
 		const auto cosTheta = fmin(Dot(-uv, n), 1.0);
-		const Vector3 rOutPerp =  etaiOverEtat * (uv + cosTheta*n);
+		const Vector3 rOutPerp = etaiOverEtat * (uv + cosTheta * n);
 		const Vector3 rOutParallel = -sqrt(fabs(1.0 - rOutPerp.LengthSquared())) * n;
 		return rOutPerp + rOutParallel;
 	}

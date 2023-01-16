@@ -37,4 +37,5 @@ namespace RayTracing
 
 		return ray;
 	}
+
 }

@@ -1,16 +1,13 @@
 ﻿#include "Source.h"
-#include "Camera.h"
-#include "Ray.h"
-#include "Vector3.h"
-#include "Color.h"
-#include "HittableList.h"
-#include "Material.h"
-#include "RayTracing.h"
 
 using namespace RayTracing;
 
 void CreateImageFile();
 Color RayColor(const Ray& ray, const Hittable& world, int depth);
+void WriteColor(std::ostream& out, const Color pixelColor, const int samplesPerPixel);
+HittableList GenerateComplexWorldScene();
+HittableList GenerateSimpleWorldScene();
+
 
 int main()
 {
@@ -31,47 +28,25 @@ void CreateImageFile()
 	constexpr auto aspectRatio = 16.0 / 9.0;
 	constexpr auto imageWidth = 400;
 	constexpr auto imageHeight = static_cast<int>(imageWidth / aspectRatio);
-	constexpr int samplesPerPixel = 100;
-	constexpr int maxDepth = 50;
+	constexpr int samplesPerPixel = 5;
+	constexpr int maxDepth = 25;
 
 	// World
-	HittableList world;
+	// COMPLEX
+	//const auto world = GenerateComplexWorldScene();
 
-	auto materialGround = make_shared<Lambertian>(Color(0.8, 0.8, 0.0));
-	auto materialCenter = make_shared<Lambertian>(Color(0.1, 0.2, 0.5));
-	auto materialLeft   = make_shared<Dielectric>(1.5);
-	auto materialRight  = make_shared<Metal>(Color(0.8, 0.6, 0.2), 1.0);
-
-	world.Add(make_shared<Sphere>(Point3( 0.0, -100.5, -1.0), 100.0, materialGround));
-	world.Add(make_shared<Sphere>(Point3( 0.0,    0.0, -1.0),   0.5, materialCenter));
-	world.Add(make_shared<Sphere>(Point3(-1.0,    0.0, -1.0),   0.5, materialLeft));
-	world.Add(make_shared<Sphere>(Point3(-1.0,    0.0, -1.0), -0.45, materialLeft));
-	world.Add(make_shared<Sphere>(Point3( 1.0,    0.0, -1.0),   0.5, materialRight));
-
-
-	//auto R = cos(PI / 4);
-
-	//auto materialLeft  = make_shared<Lambertian>(Color(0,0,1));
-	//auto materialRight = make_shared<Lambertian>(Color(1,0,0));
-
-	//world.Add(make_shared<Sphere>(Point3( R, 0, -1), R, materialRight));
-	//world.Add(make_shared<Sphere>(Point3(-R, 0, -1), R, materialLeft));
-
+	// SIMPLE
+	const auto world = GenerateSimpleWorldScene();
 
 	// Camera
 
-	//Distant view
-	//const Camera camera(Point3(-2,2,1), Point3(0,0,-1), Vector3(0,1,0), 90, aspectRatio);
-
-	//Closer view
-	const auto lookFrom = Point3(3, 3, 2);
-	const auto lookAt = Point3(0, 0, -1);
+	const auto lookFrom = Point3(13, 2, 3);
+	const auto lookAt = Point3(0, 0, 0);
 	const auto viewUp = Vector3(0, 1, 0);
-	const auto distanceToFocus = (lookFrom - lookAt).Length();
-	constexpr auto aperture = 2.0;
+	constexpr auto distanceToFocus = 10.0;
+	constexpr auto aperture = 0.1;
 	constexpr auto verticalFiledOfView = 20.0;
 	const Camera camera(lookFrom, lookAt, viewUp, verticalFiledOfView, aspectRatio, aperture, distanceToFocus);
-
 
 	// Render
 	ppmImageFile << "P3\n" << imageWidth << ' ' << imageHeight << "\n255\n";
@@ -125,3 +100,91 @@ Color RayColor(const Ray& ray, const Hittable& world, const int depth)
 
 	return resultColor;
 }
+
+HittableList GenerateComplexWorldScene()
+{
+	HittableList world;
+
+	auto groundMaterial = make_shared<Lambertian>(Color(0.5, 0.5, 0.5));
+	world.Add(make_shared<Sphere>(Point3(0, -1000, 0), 1000, groundMaterial));
+
+	for (int a = -11; a < 11; a++) {
+		for (int b = -11; b < 11; b++) {
+			const auto chooseMaterialChance = RandomDouble();
+			Point3 center(a + 0.9 * RandomDouble(), 0.2, b + 0.9 * RandomDouble());
+
+			if ((center - Point3(4, 0.2, 0)).Length() > 0.9) {
+				shared_ptr<Material> sphereMaterial;
+
+				if (chooseMaterialChance < 0.8) {
+					// diffuse
+					auto albedo = Color::Random() * Color::Random();
+					sphereMaterial = make_shared<Lambertian>(albedo);
+					world.Add(make_shared<Sphere>(center, 0.2, sphereMaterial));
+				} else if (chooseMaterialChance < 0.95) {
+					// metal
+					auto albedo = Color::Random(0.5, 1);
+					auto fuzz = RandomDouble(0, 0.5);
+					sphereMaterial = make_shared<Metal>(albedo, fuzz);
+					world.Add(make_shared<Sphere>(center, 0.2, sphereMaterial));
+				} else {
+					// glass
+					sphereMaterial = make_shared<Dielectric>(1.5);
+					world.Add(make_shared<Sphere>(center, 0.2, sphereMaterial));
+				}
+			}
+		}
+	}
+
+	auto material1 = make_shared<Dielectric>(1.5);
+	world.Add(make_shared<Sphere>(Point3(0, 1, 0), 1.0, material1));
+
+	auto material2 = make_shared<Lambertian>(Color(0.4, 0.2, 0.1));
+	world.Add(make_shared<Sphere>(Point3(-4, 1, 0), 1.0, material2));
+
+	auto material3 = make_shared<Metal>(Color(0.7, 0.6, 0.5), 0.0);
+	world.Add(make_shared<Sphere>(Point3(4, 1, 0), 1.0, material3));
+
+	return world;
+}
+
+HittableList GenerateSimpleWorldScene()
+{
+	HittableList world;
+
+	auto materialGround = make_shared<Lambertian>(Color(0.8, 0.8, 0.0));
+	auto materialCenter = make_shared<Lambertian>(Color(0.1, 0.2, 0.5));
+	auto materialLeft   = make_shared<Dielectric>(1.5);
+	auto materialRight  = make_shared<Metal>(Color(0.8, 0.6, 0.2), 0.0);
+
+	world.Add(make_shared<Sphere>(Point3( 0.0, -100.5, -1.0), 100.0, materialGround));
+	world.Add(make_shared<Sphere>(Point3( 0.0,    0.0, -1.0),   0.5, materialCenter));
+	world.Add(make_shared<Sphere>(Point3(-1.0,    0.0, -1.0),   0.5, materialLeft));
+	world.Add(make_shared<Sphere>(Point3(-1.0,    0.0, -1.0),  -0.4, materialLeft));
+	world.Add(make_shared<Sphere>(Point3( 1.0,    0.0, -1.0),   0.5, materialRight));
+
+	return world;
+}
+
+
+void WriteColor(std::ostream &out, const Color pixelColor, const int samplesPerPixel) 
+{
+	auto r = pixelColor.X();
+	auto g = pixelColor.Y();
+	auto b = pixelColor.Z();
+
+	// Multisample anti-aliasing
+	// Divide the color by the number of samples.
+	// sqrt is used to gamma-correct (gamma 2.0)
+	const auto scale = 1.0 / samplesPerPixel;
+	r = sqrt(scale * r);
+	g = sqrt(scale * g);
+	b = sqrt(scale * b);
+
+	// Write the translated [0,255] value of each color component.
+	out << static_cast<int>(256 * Clamp(r, 0.0, 0.999)) << ' '
+		<< static_cast<int>(256 * Clamp(g, 0.0, 0.999)) << ' '
+		<< static_cast<int>(256 * Clamp(b, 0.0, 0.999)) << '\n';
+}
+
+
